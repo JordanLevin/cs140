@@ -1,0 +1,34 @@
+package assignment09;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Sorting {
+
+	
+	public static ArrayList<Integer> selection(ArrayList<Integer> list){
+		if(list == null)
+			return null;
+		if(list.size() == 0)
+			return new ArrayList<Integer>();
+		int min = Collections.min(list);
+		list.remove(min);
+		ArrayList<Integer> list2= new ArrayList<Integer>();
+		list2.add(min);
+		list2.addAll(selection(list));
+		return list2;
+	}
+	
+	public static boolean inOrder(ArrayList<Integer> list){
+		if(list==null)
+			return true;
+		if(list.size() == 0)
+			return true;
+		for(int i = 0;i<list.size()-1;i++){
+			if(list.get(i)>list.get(i+1)){
+				return false;
+			}
+		}
+		return true;
+	}
+}

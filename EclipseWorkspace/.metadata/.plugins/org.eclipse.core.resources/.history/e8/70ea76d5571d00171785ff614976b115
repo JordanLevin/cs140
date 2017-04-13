@@ -1,0 +1,118 @@
+package GoogleGames2017;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class MarketExploit {
+	public static int money = 200000;
+	public static void main(String[] args) {
+		//profit that has been made
+		int profit = 0;
+		
+		//initial 2d array of the data
+		int[][] data = {
+				{786, 787, 795, 806, 807, 805, 808, 806, 808, 805},
+				{808, 808, 814, 825, 827, 826, 830, 830, 831, 827},
+				{626, 623, 620, 628, 626, 626, 632, 626, 627, 626},
+				{754, 757, 780, 796, 797, 796, 799, 814, 817, 810},
+				{116, 116, 117, 118, 119, 119, 120, 119, 119, 120},
+				{396, 391, 391, 385, 381, 376, 369, 368, 369, 370},
+				{694, 705, 706, 704, 719, 708, 715, 708, 710, 716},
+				{574, 578, 576, 575, 572, 576, 579, 565, 572, 564},
+				{283, 286, 287, 290, 288, 295, 304, 309, 310, 309},
+				{877, 902, 935, 907, 906, 902, 912, 915, 927, 942}
+		};
+		
+		int[][] data2 = {
+				{5,15,17,19,25,28},
+				{18,19,7,82,4,27},
+				
+		};
+		//other stores the profit/dollar
+		double[][] other = new double[data.length][data[0].length];
+		//profits stores profit per share
+		int[][] profits = new int[data.length][data[0].length];
+		for(int rows = 0;rows<data.length;rows++){
+			for(int cols = 0;cols<data[0].length;cols++){
+				other[rows][cols] = (double)((double)peakIndex(cols, data[rows]) /(double)data[rows][cols]);
+				profits[rows][cols] = peakIndex(cols, data[rows]);
+			}
+		}
+		
+		//take all 3 2d arrays and put them into lists
+	    List<Integer> list = new ArrayList<Integer>();
+	    List<Integer> profitsList = new ArrayList<Integer>();
+	    List<Double> diffList = new ArrayList<Double>();
+	    for (int i = 0; i < other.length; i++) {
+	        for (int j = 0; j < other[i].length; j++) { 
+	            list.add(data[i][j]); 
+	            profitsList.add(profits[i][j]); 
+	            diffList.add(other[i][j]); 
+	        }
+	    }  
+
+	    //add whatever gets max profit
+	    for(int i = 0;i<50;i++){
+	    	profit+=mostProfit(list, diffList, profitsList);
+	    }
+	    System.out.println(money);
+	    System.out.println(profit);
+	}
+	//takes a starting position and array of ints. returns the highest after initial position
+	public static int peakIndex(int index, int[] arr){
+		int max = 0;
+		int ret = 0;
+		for(int i = index;i<arr.length;i++){
+			if(arr[i]-arr[index]>max-arr[index]){
+				max = arr[i];
+				ret = i;
+			}
+			
+		}
+		return max-arr[index];
+	}
+	
+	
+	public static double mostProfit(List price, List profit, List actualProfits){
+		System.out.println(price);
+		System.out.println(profit);
+		System.out.println(actualProfits);
+		if(money<100){
+			System.out.println("breaking because money < 100");
+			return 0;
+		}
+		if(price.size()==0)
+			return 0;
+		double max = 0;
+		int index = 0;
+		for(int i = 0;i<profit.size();i++){
+			if((double)profit.get(i)>max){
+				max = (double)profit.get(i);
+				index = i;
+			}
+		}
+		int i = 10;
+		if(money-10*(Integer)price.get(index) < 0){
+			for(i = 9;i>=0;i--){
+				if(money-i*(Integer)price.get(index) > 0)
+					break;
+			}
+		}
+		int temp = (Integer)price.get(index);
+		int temp2 = (Integer)actualProfits.get(index);
+		price.remove(index);
+		profit.remove(index);
+		actualProfits.remove(index);
+		if(price.size()==0 || i*temp2-10 < 0){
+			System.out.println((i*temp2)-10);
+			return 0;
+		}
+		
+		money-=i*temp+10;
+		return i*temp2;
+	}
+	
+
+}

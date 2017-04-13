@@ -1,0 +1,30 @@
+package assignment09;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
+import org.junit.Test;
+
+public class InOrderTester {
+
+	ArrayList<Integer> t = new ArrayList<Integer>();
+	
+	@Test
+	public void testNull() {
+		Sorting.inOrder(null);
+	}
+	@Test
+	public void testEmpty() {
+		Sorting.inOrder(t);
+	}
+	@Test
+	public void testSorted() {
+		
+	}
+	@Test
+	public void testNonSorted() {
+		
+	}
+	
+}

@@ -1,0 +1,8 @@
+package assignment10;
+
+public class Snippet {
+	public static void main(String[] args) {
+		if(temp.left != null)
+			nodeQueue.add(temp.left);	}
+}
+

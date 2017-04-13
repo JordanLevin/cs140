@@ -1,0 +1,7 @@
+package GoogleGames2017;
+
+public class Hand {
+	public Card[] cards;
+	
+
+}

@@ -1,0 +1,286 @@
+package assignment10;
+
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+/**
+ * A class to implement the Binary Search Tree data structure of
+ * Comparable elements. The structure is generic in the type of 
+ * Comparable Objects it contains.
+ * @param <T> the type of the Comparable elements this structure is to hold
+ */
+public class ComparableBST<T extends Comparable<? super T>> {
+    private T data;
+    private ComparableBST<T> left;
+    private ComparableBST<T> right;
+
+    /**
+     * Constructs an empty BST with a Comparator
+     * @param comp the Comparator to use to impose an ordering on instances of T
+     */
+    public ComparableBST(T data) {
+        this.data = data;
+    }
+
+    /**
+     * Inserts an element into this BST
+     * @param element the element to insert into this BST
+     */
+    public void insert(T element) {
+    	if(data == null)
+    		data = element;
+    	if(data.compareTo(element)>0){
+    		if(right == null)
+    			right = new ComparableBST<T>(element);
+    		else
+    			right.insert(element);
+    	}
+    	else if(data.compareTo(element)<0){
+    		if(left == null)
+    			left = new ComparableBST<T>(element);
+    		else
+    			left.insert(element);
+    	}
+    	else{
+    		return;
+    	}
+    }
+
+    /**
+     * Searchs for a given element in this BST
+     * @param element the element to search this BST for
+     * @return the element in this BST matching the given element, if found,
+     *         otherwise null if the given element is not in this BST
+     */
+    public T find(T element) {
+    	if(data.compareTo(element)>0){
+    		if(right == null)
+    			return null;
+    		return right.find(element);
+    	}
+    	else if(data.compareTo(element)<0){
+    		if(left==null)
+    			return null;
+    		return left.find(element);
+    	}
+    	else{
+    		return data;
+    	}
+    }
+
+    /**
+     * Gathers all the elements of this BST in order
+     * @return a List holding the elements in this BST in order
+     */
+    public List<T> getElements() {
+        List<T> list = new ArrayList<>();
+        inOrder(list);
+        return list;
+    }
+    public void inOrder(List<T> list){
+        if(data != null){
+        	if(left!=null) left.inOrder(list);
+        	list.add(data);
+        	if(right!=null) right.inOrder(list);
+        }
+    }
+    
+
+    /**
+     * Pretty prints the contents of this BST in a horizontal tree-like fashion
+     */
+    public void prettyPrint() {
+        prettyPrint(0);
+    }
+
+    private void prettyPrint(int indentLevel) {
+
+    	if(left!=null){
+    		left.prettyPrint(indentLevel+1);
+    	}
+    	if(data!=null){
+        	for(int i = 0;i<indentLevel;i++){
+        		System.out.print(" ");
+        	}
+        	System.out.println(data);
+    	}
+    		
+    	if(right!=null)
+    		right.prettyPrint(indentLevel+1);
+    	
+        // TODO
+        // similar to printInOrder from assignment09,
+        // but print `indentLevel` amount of spaces before printing data on its own line
+        // you may use a for loop to print `indentLevel` amount of spaces
+        // each time you recurse, you add to indentLevel
+    }
+
+    
+	public ArrayList<T> bftravers(){
+		ArrayList<ComparableBST<T>> list= new ArrayList<ComparableBST<T>>();
+		list.add(this);
+		return bftravers(list);
+		
+	}
+	private ArrayList<T> bftravers(ArrayList<ComparableBST<T>> nodeQueue){
+		ArrayList<T> retval = new ArrayList<T>();
+		if(nodeQueue.size()>0){
+			retval.add(nodeQueue.get(0).data);
+			ComparableBST<T> temp = nodeQueue.get(0);
+			nodeQueue.remove(0);
+			if(temp.left != null)
+				nodeQueue.add(temp.left);
+			if(temp.right != null)
+				nodeQueue.add(temp.right);
+			retval.addAll(bftravers(nodeQueue));
+		}
+		return retval;
+	}
+	
+	public int height(){
+		return height(this);
+	}
+	private int height(ComparableBST<T> tr){
+		if(tr == null)
+			return 0;
+		return 1 + Math.max(height(tr.left), height(tr.right));
+	}
+	
+	public boolean heightBalanced(){
+		if(this.data == null)
+			return true;
+		if(Math.abs(height(this.right)- height(this.left)) <= 1 && left!=null && right!=null)
+			return true && left.heightBalanced() && right.heightBalanced();
+		else if(Math.abs(height(this.right)- height(this.left)) <= 1 && left!=null)
+			return true && left.heightBalanced();
+		else if(Math.abs(height(this.right)- height(this.left)) <= 1 && right!=null)
+			return true && right.heightBalanced();
+		else if(this.right == null && this.left == null)
+			return true;
+		else
+			return false;
+	}
+    
+    /**
+     * A main method supplied for any debugging needs
+     */
+    public static void main(String[] args) {
+    	String[] javaKeyWords = {
+    			"assert", "boolean", "break", "byte", "case", "catch", "class",
+    			"const", // not allowed to be used!
+    			"continue", "default", "do", "double", "else", "enum", "extends",
+    			"false", "final", "finally", "float", "for", 
+    			"goto", // not allowed to be used!
+    			"if", "implements", "import", "instanceof", "int", "interface",
+    			"long", "native", "new", "null", "package", "private",
+    			"protected", "public", "return", "short", "static", "strictfp",
+    			"super", "switch", "synchronized", "this", "throw", "throws",
+    			"transient", "true", "try", "void", "volatile", "while"};
+ 
+    	
+    	ComparableBST<String> tree1 = new ComparableBST<String>(null);
+
+    	Set<String> set1 = new TreeSet<>();
+    	Set<String> set2 = new HashSet<>();
+    	for(String i: javaKeyWords){
+    		tree1.insert(i);
+    		set1.add(i);
+    		set2.add(i);
+    	}
+    	
+    	/*long time1 = 0;
+    	long time2 = 0;
+    	time1 = System.currentTimeMillis();
+    	for(int i = 0; i < 1000000; i++) {
+    		for(String s : javaKeyWords) {
+    			tree1.find(s);
+    		}
+    	}
+    	time2 = System.currentTimeMillis();
+    	System.out.println("Time taken for tree1 " + (time2 - time1)/1000.0 + " seconds");
+    	
+    	
+    	time1 = 0;
+    	time2 = 0;
+    	time1 = System.currentTimeMillis();
+    	for(int i = 0; i < 1000000; i++) {
+    		for(String s : javaKeyWords) {
+    			set1.contains(s);
+    		}
+    	}
+    	time2 = System.currentTimeMillis();
+    	System.out.println("Time taken for set1 " + (time2 - time1)/1000.0 + " seconds");
+    	
+    	
+    	time1 = 0;
+    	time2 = 0;
+    	time1 = System.currentTimeMillis();
+    	for(int i = 0; i < 1000000; i++) {
+    		for(String s : javaKeyWords) {
+    			set2.contains(s);
+    		}
+    	}
+    	time2 = System.currentTimeMillis();
+    	System.out.println("Time taken for set2 " + (time2 - time1)/1000.0 + " seconds");*/
+    	
+    	ComparableBST<String> tree2 = new ComparableBST<String>(null);
+    	
+    	tree2.insert("interface");
+    	tree2.insert("double");
+    	tree2.insert("strictfp");
+    	tree2.insert("throws");
+    	tree2.insert("catch");
+    	tree2.insert("finally");
+    	tree2.insert("private");
+    	tree2.insert("break");
+    	tree2.insert("continue");
+    	tree2.insert("extends");
+    	tree2.insert("goto"); // not allowed to be used!
+    	tree2.insert("new");
+    	tree2.insert("return");
+    	tree2.insert("synchronized");
+    	tree2.insert("void");
+    	tree2.insert("implements");
+    	tree2.insert("true");
+    	tree2.insert("boolean");
+    	tree2.insert("case");
+    	tree2.insert("const"); // not allowed to be used!
+    	tree2.insert("do");
+    	tree2.insert("enum");
+    	tree2.insert("final");
+    	tree2.insert("for");
+    	tree2.insert("native");
+    	tree2.insert("package");
+    	tree2.insert("public");
+    	tree2.insert("static");
+    	tree2.insert("switch");
+    	tree2.insert("throw");
+    	tree2.insert("while");
+    	tree2.insert("assert");
+    	tree2.insert("byte");
+    	tree2.insert("class");
+       	tree2.insert("default");
+       	tree2.insert("else");
+       	tree2.insert("false");
+      	tree2.insert("float");
+    	tree2.insert("if");
+    	tree2.insert("import");    	
+    	tree2.insert("long");
+    	tree2.insert("null");
+    	tree2.insert("protected");
+    	tree2.insert("short");
+    	tree2.insert("super");
+    	tree2.insert("this");
+    	tree2.insert("transient");
+    	tree2.insert("try");
+    	tree2.insert("volatile");
+    	
+    	
+    	tree2.prettyPrint();
+    	System.out.println(tree2.heightBalanced());
+    }
+}
